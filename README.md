@@ -10,3 +10,5 @@ How to run:
 1. Clone project
 2. npm install or yarn install
 3. npm run dev
+
+Stack: Vue.js 3, Vite, Axios
