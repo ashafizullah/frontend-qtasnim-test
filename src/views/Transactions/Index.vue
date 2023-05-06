@@ -147,6 +147,7 @@ const onPageChanged = async (pageNumber) => {
 									<option value="productName">Product name</option>
 									<option value="amountSold">Amount Sold</option>
 									<option value="totalPrice">Total Price</option>
+									<option value="transactionDate">Transaction Date</option>
 								</select>
 							</div>
 						</div>
