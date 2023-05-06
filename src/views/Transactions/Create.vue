@@ -57,11 +57,11 @@ onMounted(() => {
 					<div class="card-body">
 						<form @submit.prevent="storeTransaction()">
 							<div class="mb-3">
-								<label class="form-label fw-bold">Buyer Name</label>
+								<label class="form-label fw-bold">Buyer Name<span class="text-danger">*</span></label>
 								<input type="text" class="form-control" v-model="transaction.buyerName" placeholder="Buyer name" />
 							</div>
 							<div class="mb-3">
-								<label class="form-label fw-bold">Product</label>
+								<label class="form-label fw-bold">Product<span class="text-danger">*</span></label>
 								<select class="form-select" v-model="transaction.productId">
 									<option value="">Select product:</option>
 									<option v-for="product in products" :key="product.id" :value="product.id"
@@ -71,11 +71,11 @@ onMounted(() => {
 								</select>
 							</div>
 							<div class="mb-3">
-								<label class="form-label fw-bold">Amount Sold</label>
+								<label class="form-label fw-bold">Amount Sold<span class="text-danger">*</span></label>
 								<input type="number" class="form-control" v-model="transaction.amountSold" placeholder="Stock" />
 							</div>
 							<div class="mb-3">
-								<label class="form-label fw-bold">Transaction Date</label>
+								<label class="form-label fw-bold">Transaction Date<span class="text-danger">*</span></label>
 								<input type="date" class="form-control" v-model="transaction.transactionDate" placeholder="Stock" />
 							</div>
 							<button type="submit" class="btn btn-md btn-primary rounded-sm shadow border-0">Save</button>&nbsp;

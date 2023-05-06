@@ -46,7 +46,7 @@ const updateProductType = async () => {
 					<div class="card-body">
 						<form @submit.prevent="updateProductType()">
 							<div class="mb-3">
-								<label class="form-label fw-bold">Product Type Name</label>
+								<label class="form-label fw-bold">Product Type Name<span class="text-danger">*</span></label>
 								<input type="text" class="form-control" v-model="productType.name" placeholder="Product type name" />
 							</div>
 							<button type="submit" class="btn btn-md btn-primary rounded-sm shadow border-0">Update</button>&nbsp;

@@ -8,14 +8,17 @@ import { formatCurrency, formatDate } from '../../helpers'
 const transactions = ref([]);
 const products = ref([]);
 const productTypes = ref([]);
+const mostSoldProducts = ref([]);
 const currentPage = ref(1);
 const totalPages = ref(1);
+const itemsPerPage = ref(10)
 
 const buyerName = ref("" || new URL(document.location).searchParams.get("buyerName"));
 const sortBy = ref("" || new URL(document.location).searchParams.get("sortBy"));
 const orderBy = ref("desc" || new URL(document.location).searchParams.get("orderBy"));
 const productId = ref("" || new URL(document.location).searchParams.get("productId"));
 const productTypeId = ref("" || new URL(document.location).searchParams.get("productTypeId"));
+const productTypeIdForMostSold = ref("" || new URL(document.location).searchParams.get("productTypeIdForMostSold"));
 const startDate = ref("" || new URL(document.location).searchParams.get("startDate"));
 const endDate = ref("" || new URL(document.location).searchParams.get("endDate"));
 
@@ -37,6 +40,14 @@ const fetchDataTransactions = async () => {
 			totalPages.value = response.data.totalPages;
 		});
 };
+
+const mostSoldProduct = async () => {
+	await api
+		.get(`/api/transactions/${productTypeIdForMostSold.value}/most-sold-product`)
+		.then((response) => {
+			mostSoldProducts.value = response.data.data;
+		});
+}
 
 const getProducts = async () => {
 	let currentPage = 1;
@@ -121,6 +132,10 @@ watch(currentPage, fetchDataTransactions);
 const onPageChanged = async (pageNumber) => {
 	currentPage.value = pageNumber;
 };
+
+const rowNumber = (index) => {
+	return (currentPage.value - 1) * itemsPerPage.value + index + 1;
+}
 </script>
 
 <template>
@@ -201,11 +216,35 @@ const onPageChanged = async (pageNumber) => {
 						</div>
 					</div>
 				</div>
+				<div class="card border-0 rounded shadow mb-2">
+					<div class="card-body">
+						<label class="form-label fw-bold">Show the most product sold by product type</label>
+						<div class="mt-2">
+							<div class="col-12">
+								<label class="form-label fw-bold">Select product type</label>
+								<select class="form-select" v-model="productTypeIdForMostSold" @change="mostSoldProduct()">
+									<option value="">Select product type:</option>
+									<option v-for="productType in productTypes" :key="productType.id" :value="productType.id">
+										{{ productType.name }}
+									</option>
+								</select>
+							</div>
+						</div>
+						<div class="mt-2">
+							<ul>
+								<li v-for="item in mostSoldProducts" :key="item.id">
+									{{ item.product.productName }} - {{ item.amountSold }} pcs
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
 				<div class="card border-0 rounded shadow">
 					<div class="card-body">
 						<table class="table table-bordered">
 							<thead class="bg-dark text-white">
 								<tr>
+									<th scope="col">#</th>
 									<th scope="col">Buyer Name</th>
 									<th scope="col">Product Name</th>
 									<th scope="col">Product Type</th>
@@ -217,11 +256,12 @@ const onPageChanged = async (pageNumber) => {
 							</thead>
 							<tbody>
 								<tr v-if="transactions.length == 0">
-									<td colspan="7" class="text-center">
+									<td colspan="8" class="text-center">
 										<div class="alert alert-danger mb-0">Data not available!</div>
 									</td>
 								</tr>
 								<tr v-else v-for="(transaction, index) in transactions" :key="index">
+									<td>{{ rowNumber(index) }} </td>
 									<td>{{ transaction.buyerName }} </td>
 									<td>{{ transaction.product.productName }} </td>
 									<td>{{ transaction.product.productType.name }} </td>

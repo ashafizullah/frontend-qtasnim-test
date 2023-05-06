@@ -7,6 +7,7 @@ import { deleteConfirm, successAlert } from '../../composables/useAlert'
 const productTypes = ref([]);
 const currentPage = ref(1);
 const totalPages = ref(1);
+const itemsPerPage = ref(10)
 
 const name = ref("" || new URL(document.location).searchParams.get("name"));
 const orderBy = ref("desc" || new URL(document.location).searchParams.get("orderBy"));
@@ -68,6 +69,10 @@ watch(currentPage, fetchDataProductTypes);
 const onPageChanged = async (pageNumber) => {
 	currentPage.value = pageNumber;
 };
+
+const rowNumber = (index) => {
+	return (currentPage.value - 1) * itemsPerPage.value + index + 1;
+}
 </script>
 
 <template>
@@ -112,6 +117,7 @@ const onPageChanged = async (pageNumber) => {
 						<table class="table table-bordered">
 							<thead class="bg-dark text-white">
 								<tr>
+									<th scope="col">#</th>
 									<th scope="col">Name</th>
 									<th scope="col" style="width: 15%">Actions</th>
 								</tr>
@@ -123,6 +129,7 @@ const onPageChanged = async (pageNumber) => {
 									</td>
 								</tr>
 								<tr v-else v-for="(productType, index) in productTypes" :key="index">
+									<td>{{ rowNumber(index) }}</td>
 									<td>{{ productType.name }}</td>
 									<td class="text-center">
 										<router-link :to="{ name: 'productTypes.edit', params: { id: productType.id } }"
